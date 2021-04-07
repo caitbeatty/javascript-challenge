@@ -63,8 +63,10 @@ data.forEach(function(sightingReport) {
 //define function
 
 var button = d3.select("#filter-btn");
-button.on("click", handleClick);
+var form = d3.select("#datetime");
 
+button.on("click", handleClick);
+form.on("submit", handleClick);
 
 
 
@@ -80,15 +82,33 @@ function handleClick() {
   // Get the value property of the input element
   var inputValue = inputElement.property("value");
 
-//   console.log(inputValue);
-//   console.log(data);
+    // make sure list is empty and not adding on another search
+    if (inputValue.length == 0){
 
-  var filteredData = data.filter(alien => alien.datetime === inputValue);
+      tbody.html("");
 
-  console.log(filteredData);}
+      return default_table();
+    }
 
-// Then, select the unordered list element by class name
-    var list = d3.select("#ufo-table");  
+    //if empty, go to this 
+    else {
+      var filteredData = data.filter(alien => alien.datetime === inputValue);  
+    }  
   
   // remove any children from the list to
-    list.html("");
+    tbody.html("");
+
+  // follow above steps to make table again but with filtered data 
+  filteredData.forEach(function(filtered_sightingReport) {
+    // console.log(filtered_sightingReport);
+    var newRow = tbody.append("tr");
+    Object.entries(filtered_sightingReport).forEach(function([key, value]) {
+      console.log(key, value);
+      // Append a cell to the row for each value
+      // in the weather report object
+      var newCell = newRow.append("td");
+      newCell.text(value);
+    });
+  });
+
+};
